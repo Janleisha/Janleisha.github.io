@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Köln Nightscape 1.0</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css' rel='stylesheet' />
+
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+    #menu {
+        background: #29334d;
+        position: absolute;
+        z-index: 1;
+        top: 9px;
+        right: 50px;
+        border-radius: 6px;
+        width: 120px;
+        border: 1px solid rgba(117, 117, 117, 0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #7f8287;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #4a72c2;
+        color: #fffae3;
+    }
+
+    #menu a.active {
+        background-color: #2a55ac;
+        color: #fffae3;
+    }
+
+    #menu a.active:hover {
+        background: #1c3a78;
+    }
+</style>
+
+<nav id="menu"></nav>
+<div id='map'></div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiamFubGVpc2hhIiwiYSI6ImNsMm5iM2J0YjAxYWgzZHM0bHpvZXRmZmIifQ.9kNz7Df-6APw6z9gfNlYcA';
+const map = new mapboxgl.Map({attributionControl: false,
+    container: 'map', // container ID
+    style: 'mapbox://styles/janleisha/cl2q8zr8w001t14mfyjepakwb', // style URL
+    center: [6.958714, 50.937059], // starting position [lng, lat]
+    zoom: 13.55 // starting zoom
+});
+
+    // Add custom attribution to the map.
+    map.addControl(new mapboxgl.AttributionControl({
+        customAttribution: 'Map design by Jada Hung Jui Yu 洪睿妤'
+    }));
+
+    // Add fullscreen control to the map.
+    map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector('body')}));
+
+    // Add geolocate control to the map.
+    map.addControl(
+        new mapboxgl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true
+            },
+            // When active the map will receive updates to the device's location as it changes.
+            trackUserLocation: true,
+            // Draw an arrow next to the location dot to indicate which direction the device is heading.
+            showUserHeading: true
+    }));
+
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
+     
+// Wait until the map has finished loading. Menu source linking.
+map.on('load', () => {
+
+        map.addSource('Media Light', {
+            type: 'vector',
+            url: 'mapbox://janleisha.cysfsxfe'
+        });
+        map.addLayer({
+            "id": "Media Light",
+            "type": "circle",
+            "metadata": {"mapbox:group": "ed14d49d217ccd2788fff73014b79120"},
+            "source": "composite",
+            "source-layer": "Mapping_the_City_Light-_Media-2osf87",
+            "layout": {"visibility": "visible"},
+            "paint": {
+                "circle-color": "hsl(178, 100%, 93%)",
+                "circle-blur": [
+                    "interpolate",
+                    ["exponential", 0.9],
+                    ["zoom"],
+                    0,
+                    7,
+                    22,
+                    0.7
+                ],
+                "circle-radius": [
+                    "interpolate",
+                    ["exponential", 1],
+                    ["zoom"],
+                    0,
+                    0.5,
+                    22,
+                    18
+                ]
+            }
+        });
+
+        map.addSource('City Light Poster', {
+            type: 'vector',
+            url: 'mapbox://janleisha.5ng3phpe'
+        });
+        map.addLayer({
+            "id": "City Light Poster",
+            "type": "circle",
+            "metadata": {"mapbox:group": "ed14d49d217ccd2788fff73014b79120"},
+            "source": "composite",
+            "source-layer": "Mapping_the_City_Light-_CLP_T-7bei5n",
+            "paint": {
+                "circle-radius": [
+                    "interpolate",
+                    ["exponential", 0.8],
+                    ["zoom"],
+                    0,
+                    0.2,
+                    12.43,
+                    5,
+                    22,
+                    18
+                ],
+                "circle-color": "hsl(59, 98%, 100%)",
+                "circle-blur": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    0,
+                    2,
+                    22,
+                    1.2
+                ]
+            }
+        });
+    });
+
+
+    map.on('idle', () => {
+
+        if (!map.getLayer('City Light Poster') || !map.getLayer('Media Light')) {
+            return;
+        }
+
+        // Enumerate ids of the layers.
+        const toggleableLayerIds = ['City Light Poster', 'Media Light'];
+
+        // Set up the corresponding toggle button for each layer.
+        for (const id of toggleableLayerIds) {
+            // Skip layers that already have a button set up.
+            if (document.getElementById(id)) {
+                continue;
+            }
+
+            // Create a link.
+            const link = document.createElement('a');
+            link.id = id;
+            link.href = '#';
+            link.textContent = id;
+            link.className = 'active';
+
+            // Show or hide layer when the toggle is clicked.
+            link.onclick = function (e) {
+                const clickedLayer = this.textContent;
+                e.preventDefault();
+                e.stopPropagation();
+
+                const visibility = map.getLayoutProperty(
+                    clickedLayer,
+                    'visibility'
+                );
+
+                // Toggle layer visibility by changing the layout object's visibility property.
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(
+                        clickedLayer,
+                        'visibility',
+                        'visible'
+                    );
+                }
+            };
+
+            const layers = document.getElementById('menu');
+            layers.appendChild(link);
+        }
+    });
+</script>
+
+</body>
+</html>
