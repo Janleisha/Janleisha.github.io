@@ -71,7 +71,8 @@ const map = new mapboxgl.Map({attributionControl: false,
 
     // Add custom attribution to the map.
     map.addControl(new mapboxgl.AttributionControl({
-        customAttribution: 'Map design by Jada Hung Jui Yu 洪睿妤'
+        customAttribution: 'Map design by Jada Hung Jui Yu 洪睿妤',
+        compact: true
     }));
 
     // Add fullscreen control to the map.
@@ -90,7 +91,12 @@ const map = new mapboxgl.Map({attributionControl: false,
     }));
 
     // Add zoom and rotation controls to the map.
-    map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(
+        new mapboxgl.NavigationControl({
+            visualizePitch: true,
+            showCompass: true,
+            showZoom: true
+    }));
 
      
 // Wait until the map has finished loading. Menu source linking.
