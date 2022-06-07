@@ -136,6 +136,214 @@ map.on('load', () => {
             }
         });
 
+        map.addSource('Color Lights', {
+            type: 'vector',
+            url: 'mapbox://janleisha.844znyup'
+        });
+        map.addLayer({
+            "id": "Color Lights",
+            "type": "circle",
+            "metadata": {"mapbox:group": "086f29dc8e1de405c51013fb9186a83e"},
+            "source": "composite",
+            "source-layer": "Mapping_the_City_Light-_Untit-b0s68j",
+            "layout": {"visibility": "visible"},
+            "paint": {
+                "circle-color": [
+                    "match",
+                    ["get", "description"],
+                    ["Pink neon"],
+                    "hsl(311, 100%, 57%)",
+                    ["Purplish pink"],
+                    "hsl(287, 100%, 82%)",
+                    ["Pale pink light"],
+                    "hsl(334, 100%, 87%)",
+                    ["2600K flood"],
+                    "hsl(41, 100%, 75%)",
+                    ["Red light"],
+                    "hsl(0, 100%, 54%)",
+                    ["2700K facade light"],
+                    "hsl(48, 100%, 78%)",
+                    ["4000K uplight"],
+                    "hsl(191, 100%, 96%)",
+                    ["2400K restaurant "],
+                    "hsl(36, 100%, 68%)",
+                    ["Blue gradient media facade spilling light"],
+                    "hsl(212, 100%, 60%)",
+                    ["Red"],
+                    "hsl(0, 100%, 56%)",
+                    ["All 3000K spill light"],
+                    "hsl(48, 100%, 94%)",
+                    ["Castle 2600K flood light"],
+                    "hsl(42, 100%, 70%)",
+                    ["Gaffes Kölsch sign Blue spill"],
+                    "hsl(214, 100%, 44%)",
+                    ["Spilled 3000K"],
+                    "hsl(55, 100%, 88%)",
+                    ["Neon green"],
+                    "hsl(103, 100%, 53%)",
+                    ["3000K yellowish spill light"],
+                    "hsl(58, 100%, 83%)",
+                    ["Saturn orange "],
+                    "hsl(28, 100%, 59%)",
+                    ["Blue uplights"],
+                    "hsl(204, 100%, 61%)",
+                    "hsl(0, 0%, 31%)"
+                ],
+                "circle-radius": 30,
+                "circle-blur": 2
+            }
+        });
+
+        map.addSource('road-primary copy 2', {
+            type: 'vector',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-primary copy 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 6,
+            "filter": [
+                "all",
+                ["==", ["get", "class"], "primary"],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 16, "round"],
+                "line-join": ["step", ["zoom"], "bevel", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(47, 100%, 93%)",
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.5],
+                    ["zoom"],
+                    15,
+                    1,
+                    22,
+                    0.5
+                ],
+                "line-blur": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    16,
+                    5,
+                    22,
+                    10
+                ]}
+        });
+
+        map.addSource('road-secondary-tertiary copy 2', {
+            type: 'vector',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-secondary-tertiary copy 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 8,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.1,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(47, 100%, 93%)",
+                "line-blur": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    16,
+                    5,
+                    22,
+                    10
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.5],
+                    ["zoom"],
+                    15,
+                    1,
+                    22,
+                    0.5
+                ]}
+        });
+
+        map.addSource('3D Building', {
+            type: 'fill-extrusion',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "3D Building",
+            "type": "fill-extrusion",
+            "metadata": {"mapbox:group": "58649e4c17fa7a0920465130066111f9"},
+            "source": "composite",
+            "source-layer": "building",
+            "minzoom": 14.5,
+            "filter": [
+                "all",
+                ["==", ["get", "underground"], "false"],
+                ["!=", ["get", "extrude"], "false"]
+            ],
+            "layout": {"visibility": "visible"},
+            "paint": {
+                "fill-extrusion-color": [
+                    "interpolate",
+                    ["exponential", 1.1],
+                    ["zoom"],
+                    14,
+                    "hsl(220, 18%, 31%)",
+                    20,
+                    "hsl(220, 18%, 46%)"
+                ],
+                "fill-extrusion-height": ["get", "height"],
+                "fill-extrusion-opacity": [
+                    "interpolate",
+                    ["exponential", 1.35],
+                    ["zoom"],
+                    14.5,
+                    0.3,
+                    20,
+                    0.9
+                ]
+            }
+        });
+
         map.addSource('City Light Poster', {
             type: 'vector',
             url: 'mapbox://janleisha.5ng3phpe'
@@ -146,6 +354,7 @@ map.on('load', () => {
             "metadata": {"mapbox:group": "ed14d49d217ccd2788fff73014b79120"},
             "source": "composite",
             "source-layer": "Mapping_the_City_Light-_CLP_T-7bei5n",
+            "layout": {"visibility": "visible"},
             "paint": {
                 "circle-radius": [
                     "interpolate",
@@ -175,12 +384,12 @@ map.on('load', () => {
 
     map.on('idle', () => {
 
-        if (!map.getLayer('City Light Poster') || !map.getLayer('Media Light')) {
+        if (!map.getLayer('3D Building') ||!map.getLayer('City Light Poster') || !map.getLayer('Media Light') || !map.getLayer('Color Lights') || !map.getLayer('road-primary copy 2')) {
             return;
         }
 
         // Enumerate ids of the layers.
-        const toggleableLayerIds = ['City Light Poster', 'Media Light'];
+        const toggleableLayerIds = ['3D Building', 'City Light Poster', 'Media Light', 'Color Lights', 'Street Lights'];
 
         // Set up the corresponding toggle button for each layer.
         for (const id of toggleableLayerIds) {
