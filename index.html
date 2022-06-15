@@ -194,116 +194,6 @@ map.on('load', () => {
             }
         });
 
-        map.addSource('road-primary copy 2', {
-            type: 'vector',
-            url: 'mapbox://mapbox.mapbox-streets-v8'
-        });
-        map.addLayer({
-            "id": "road-primary copy 2",
-            "type": "line",
-            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
-            "source": "composite",
-            "source-layer": "road",
-            "minzoom": 6,
-            "filter": [
-                "all",
-                ["==", ["get", "class"], "primary"],
-                ["match", ["get", "structure"], ["none", "ford"], true, false],
-                ["==", ["geometry-type"], "LineString"]
-            ],
-            "layout": {
-                "line-cap": ["step", ["zoom"], "butt", 16, "round"],
-                "line-join": ["step", ["zoom"], "bevel", 14, "round"]
-            },
-            "paint": {
-                "line-width": [
-                    "interpolate",
-                    ["exponential", 1.5],
-                    ["zoom"],
-                    5,
-                    0.75,
-                    18,
-                    32
-                ],
-                "line-color": "hsl(47, 100%, 93%)",
-                "line-opacity": [
-                    "interpolate",
-                    ["exponential", 0.5],
-                    ["zoom"],
-                    15,
-                    1,
-                    22,
-                    0.5
-                ],
-                "line-blur": [
-                    "interpolate",
-                    ["linear"],
-                    ["zoom"],
-                    16,
-                    5,
-                    22,
-                    10
-                ]}
-        });
-
-        map.addSource('road-secondary-tertiary copy 2', {
-            type: 'vector',
-            url: 'mapbox://mapbox.mapbox-streets-v8'
-        });
-        map.addLayer({
-            "id": "road-secondary-tertiary copy 2",
-            "type": "line",
-            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
-            "source": "composite",
-            "source-layer": "road",
-            "minzoom": 8,
-            "filter": [
-                "all",
-                [
-                    "match",
-                    ["get", "class"],
-                    ["secondary", "tertiary"],
-                    true,
-                    false
-                ],
-                ["match", ["get", "structure"], ["none", "ford"], true, false],
-                ["==", ["geometry-type"], "LineString"]
-            ],
-            "layout": {
-                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
-                "line-join": ["step", ["zoom"], "miter", 14, "round"]
-            },
-            "paint": {
-                "line-width": [
-                    "interpolate",
-                    ["exponential", 1.5],
-                    ["zoom"],
-                    5,
-                    0.1,
-                    18,
-                    32
-                ],
-                "line-color": "hsl(47, 100%, 93%)",
-                "line-blur": [
-                    "interpolate",
-                    ["linear"],
-                    ["zoom"],
-                    16,
-                    5,
-                    22,
-                    10
-                ],
-                "line-opacity": [
-                    "interpolate",
-                    ["exponential", 0.5],
-                    ["zoom"],
-                    15,
-                    1,
-                    22,
-                    0.5
-                ]}
-        });
-
         map.addSource('3D Building', {
             type: 'fill-extrusion',
             url: 'mapbox://mapbox.mapbox-streets-v8'
@@ -384,7 +274,7 @@ map.on('load', () => {
 
     map.on('idle', () => {
 
-        if (!map.getLayer('3D Building') ||!map.getLayer('City Light Poster') || !map.getLayer('Media Light') || !map.getLayer('Color Lights') || !map.getLayer('road-primary copy 2')) {
+        if (!map.getLayer('3D Building') ||!map.getLayer('City Light Poster') || !map.getLayer('Media Light') || !map.getLayer('Color Lights')) {
             return;
         }
 
