@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>Köln Nightscape 1.0</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name=”apple-mobile-web-app-capable” content=”yes”>
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js'></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css' rel='stylesheet' />
 
@@ -115,7 +116,7 @@ map.on('load', function () {
             "type": "circle",
             "metadata": {"mapbox:group": "ed14d49d217ccd2788fff73014b79120"},
             "source": "composite",
-            "source-layer": "Mapping_the_City_Light-_Media-2osf87",
+            "source-layer": "Mapping_the_City_Light-_Media-dbi8tb",
             "layout": {"visibility": "visible"},
             "paint": {
                 "circle-color": "hsl(178, 100%, 93%)",
@@ -198,41 +199,40 @@ map.on('load', function () {
             }
         });
 
-        map.addSource('3D Building', {
+        map.addSource('3D Buildings', {
             type: 'fill-extrusion',
             url: 'mapbox://mapbox.mapbox-streets-v8'
         });
         map.addLayer({
-            "id": "3D Building",
+            "id": "3D Buildings",
             "type": "fill-extrusion",
             "metadata": {"mapbox:group": "58649e4c17fa7a0920465130066111f9"},
             "source": "composite",
             "source-layer": "building",
-            "minzoom": 14.5,
+            "minzoom": 15,
             "filter": [
                 "all",
                 ["==", ["get", "underground"], "false"],
                 ["!=", ["get", "extrude"], "false"]
             ],
-            "layout": {"visibility": "visible"},
             "paint": {
                 "fill-extrusion-color": [
                     "interpolate",
                     ["exponential", 1.1],
                     ["zoom"],
                     14,
-                    "hsl(220, 18%, 31%)",
+                    "hsl(220, 28%, 16%)",
                     20,
-                    "hsl(220, 18%, 46%)"
+                    "hsl(220, 18%, 34%)"
                 ],
                 "fill-extrusion-height": ["get", "height"],
                 "fill-extrusion-opacity": [
                     "interpolate",
-                    ["exponential", 1.35],
+                    ["exponential", 0.7],
                     ["zoom"],
-                    14.5,
-                    0.3,
-                    20,
+                    15,
+                    0.5,
+                    19,
                     0.9
                 ]
             }
@@ -247,7 +247,7 @@ map.on('load', function () {
             "type": "circle",
             "metadata": {"mapbox:group": "ed14d49d217ccd2788fff73014b79120"},
             "source": "composite",
-            "source-layer": "Mapping_the_City_Light-_CLP_T-7bei5n",
+            "source-layer": "Mapping_the_City_Light-_CLP_T-bwrwct",
             "layout": {"visibility": "visible"},
             "paint": {
                 "circle-radius": [
@@ -273,6 +273,8 @@ map.on('load', function () {
                 ]
             }
         });
+
+// Street Lights layers.
 
         map.addSource('Lane Diffuse 2', {
             type: 'line',
@@ -1390,17 +1392,2161 @@ map.on('load', function () {
             }
         });
 
+// Base Map layers.
+
+        map.addSource('national-park', {
+            type: 'fill',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "national-park",
+            "type": "fill",
+            "metadata": {
+                "mapbox:featureComponent": "land-and-water",
+                "mapbox:group": "Land, water, & sky, land"
+            },
+            "source": "composite",
+            "source-layer": "landuse_overlay",
+            "minzoom": 5,
+            "filter": ["==", ["get", "class"], "national_park"],
+            "layout": {},
+            "paint": {
+                "fill-color": "hsla(138, 92%, 15%, 0.4)",
+                "fill-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    5,
+                    0,
+                    6,
+                    0.5,
+                    10,
+                    0.5
+                ]
+            }
+        });
+
+        map.addSource('landuse', {
+            type: 'fill',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "landuse",
+            "type": "fill",
+            "metadata": {
+                "mapbox:featureComponent": "land-and-water",
+                "mapbox:group": "Land, water, & sky, land"
+            },
+            "source": "composite",
+            "source-layer": "landuse",
+            "minzoom": 5,
+            "filter": [
+                "all",
+                [">=", ["to-number", ["get", "sizerank"]], 0],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["park", "airport", "glacier", "pitch", "sand", "facility"],
+                    true,
+                    false
+                ],
+                [
+                    "<=",
+                    [
+                        "-",
+                        ["to-number", ["get", "sizerank"]],
+                        [
+                            "interpolate",
+                            ["exponential", 1.5],
+                            ["zoom"],
+                            12,
+                            0,
+                            18,
+                            14
+                        ]
+                    ],
+                    14
+                ]
+            ],
+            "layout": {},
+            "paint": {
+                "fill-color": "hsla(138, 93%, 15%, 0.5)",
+                "fill-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    5,
+                    0,
+                    6,
+                    ["match", ["get", "class"], "glacier", 0.5, 1]
+                ]
+            }
+        });
+
+        map.addSource('water-shadow', {
+            type: 'fill',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "water-shadow",
+            "type": "fill",
+            "metadata": {
+                "mapbox:featureComponent": "land-and-water",
+                "mapbox:group": "Land, water, & sky, water"
+            },
+            "source": "composite",
+            "source-layer": "water",
+            "minzoom": 7,
+            "layout": {},
+            "paint": {
+                "fill-color": "hsl(225, 36%, 1%)",
+                "fill-translate": [
+                    "interpolate",
+                    ["exponential", 1.2],
+                    ["zoom"],
+                    7,
+                    ["literal", [0, 0]],
+                    16,
+                    ["literal", [-1, -1]]
+                ],
+                "fill-translate-anchor": "viewport"
+            }
+        });
+
+        map.addSource('water', {
+            type: 'fill',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "water",
+            "type": "fill",
+            "metadata": {
+                "mapbox:featureComponent": "land-and-water",
+                "mapbox:group": "Land, water, & sky, water"
+            },
+            "source": "composite",
+            "source-layer": "water",
+            "layout": {},
+            "paint": {"fill-color": "hsla(214, 100%, 29%, 0.5)"}
+        });
+
+        map.addSource('tunnel-street-minor-low', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-street-minor-low",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels-case"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                [
+                    "step",
+                    ["zoom"],
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        true,
+                        false
+                    ],
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        [
+                            "street",
+                            "street_limited",
+                            "primary_link",
+                            "secondary_link",
+                            "tertiary_link"
+                        ],
+                        true,
+                        false
+                    ]
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        2,
+                        "track",
+                        1,
+                        0.5
+                    ],
+                    18,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        18,
+                        12
+                    ]
+                ],
+                "line-color": "hsl(225, 36%, 13%)"
+            }
+        });
+
+        map.addSource('tunnel-street-minor-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-street-minor-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels-case"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                [
+                    "step",
+                    ["zoom"],
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        true,
+                        false
+                    ],
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        [
+                            "street",
+                            "street_limited",
+                            "primary_link",
+                            "secondary_link",
+                            "tertiary_link"
+                        ],
+                        true,
+                        false
+                    ]
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 34%, 26%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        2,
+                        "track",
+                        1,
+                        0.5
+                    ],
+                    18,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        18,
+                        12
+                    ]
+                ],
+                "line-opacity": ["step", ["zoom"], 0, 14, 1],
+                "line-dasharray": [3, 3]
+            }
+        });
+
+        map.addSource('tunnel-primary-secondary-tertiary-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-primary-secondary-tertiary-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels-case"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["primary", "secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    ["match", ["get", "class"], "primary", 1, 0.75],
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 34%, 26%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    ["match", ["get", "class"], "primary", 0.75, 0.1],
+                    18,
+                    ["match", ["get", "class"], "primary", 32, 26]
+                ],
+                "line-dasharray": [3, 3]
+            }
+        });
+
+        map.addSource('tunnel-major-link-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-major-link-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels-case"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 34%, 26%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-dasharray": [3, 3]
+            }
+        });
+
+        map.addSource('tunnel-motorway-trunk-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-motorway-trunk-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels-case"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    1,
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 34%, 26%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-dasharray": [3, 3]
+            }
+        });
+
+        map.addSource('tunnel-major-link', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-major-link",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsl(225, 36%, 13%)"
+            }
+        });
+
+        map.addSource('tunnel-street-minor', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-street-minor",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                [
+                    "step",
+                    ["zoom"],
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        true,
+                        false
+                    ],
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        [
+                            "street",
+                            "street_limited",
+                            "primary_link",
+                            "secondary_link",
+                            "tertiary_link"
+                        ],
+                        true,
+                        false
+                    ]
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        2,
+                        "track",
+                        1,
+                        0.5
+                    ],
+                    18,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        18,
+                        12
+                    ]
+                ],
+                "line-color": "hsl(225, 36%, 13%)",
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('tunnel-primary-secondary-tertiary', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-primary-secondary-tertiary",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["primary", "secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    ["match", ["get", "class"], "primary", 0.75, 0.1],
+                    18,
+                    ["match", ["get", "class"], "primary", 32, 26]
+                ],
+                "line-color": "hsl(225, 36%, 13%)"
+            }
+        });
+
+        map.addSource('tunnel-motorway-trunk', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "tunnel-motorway-trunk",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, tunnels"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "tunnel"],
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(225, 36%, 13%)"
+            }
+        });
+
+        map.addSource('road-minor-low', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-minor-low",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                [
+                    "step",
+                    ["zoom"],
+                    false,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["secondary_link", "tertiary_link"],
+                        true,
+                        false
+                    ]
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    14,
+                    ["match", ["get", "class"], "track", 1, 0.5],
+                    18,
+                    12
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('road-minor-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-minor-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                [
+                    "step",
+                    ["zoom"],
+                    false,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["secondary_link", "tertiary_link"],
+                        true,
+                        false
+                    ]
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    14,
+                    ["match", ["get", "class"], "track", 1, 0.5],
+                    18,
+                    12
+                ],
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('road-street-low', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-street-low",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 11,
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('road-street-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-street-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('road-secondary-tertiary-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-secondary-tertiary-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 10,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    0.75,
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.1,
+                    18,
+                    26
+                ]
+            }
+        });
+
+        map.addSource('road-primary-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-primary-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 10,
+            "filter": [
+                "all",
+                ["==", ["get", "class"], "primary"],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    1,
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ]
+            }
+        });
+
+        map.addSource('road-major-link-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-major-link-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 10,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-opacity": ["step", ["zoom"], 0, 11, 1]
+            }
+        });
+
+        map.addSource('road-motorway-trunk-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-motorway-trunk-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 5,
+            "filter": [
+                "all",
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    1,
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-opacity": [
+                    "step",
+                    ["zoom"],
+                    ["match", ["get", "class"], "motorway", 1, 0],
+                    6,
+                    1
+                ]
+            }
+        });
+
+        map.addSource('road-major-link', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-major-link",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 10,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 13, "round"],
+                "line-join": ["step", ["zoom"], "miter", 13, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('road-minor', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-minor",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                [
+                    "step",
+                    ["zoom"],
+                    false,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["secondary_link", "tertiary_link"],
+                        true,
+                        false
+                    ]
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    14,
+                    ["match", ["get", "class"], "track", 1, 0.5],
+                    18,
+                    12
+                ],
+                "line-color": "hsl(225, 37%, 23%)",
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('road-street', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-street",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsl(225, 37%, 23%)",
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('road-secondary-tertiary', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-secondary-tertiary",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 8,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.1,
+                    18,
+                    26
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('road-primary', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-primary",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 6,
+            "filter": [
+                "all",
+                ["==", ["get", "class"], "primary"],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('road-motorway-trunk', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "road-motorway-trunk",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, surface"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 5,
+            "filter": [
+                "all",
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 13, "round"],
+                "line-join": ["step", ["zoom"], "miter", 13, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('bridge-street-minor-low', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-street-minor-low",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [
+                    "step",
+                    ["zoom"],
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        true,
+                        false
+                    ],
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        [
+                            "street",
+                            "street_limited",
+                            "primary_link",
+                            "secondary_link",
+                            "tertiary_link"
+                        ],
+                        true,
+                        false
+                    ]
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {"line-cap": ["step", ["zoom"], "butt", 14, "round"]},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        2,
+                        "track",
+                        1,
+                        0.5
+                    ],
+                    18,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        18,
+                        12
+                    ]
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('bridge-street-minor-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-street-minor-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [
+                    "step",
+                    ["zoom"],
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        true,
+                        false
+                    ],
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        [
+                            "street",
+                            "street_limited",
+                            "primary_link",
+                            "secondary_link",
+                            "tertiary_link"
+                        ],
+                        true,
+                        false
+                    ]
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        2,
+                        "track",
+                        1,
+                        0.5
+                    ],
+                    18,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        18,
+                        12
+                    ]
+                ],
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('bridge-primary-secondary-tertiary-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-primary-secondary-tertiary-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["primary", "secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    ["match", ["get", "class"], "primary", 1, 0.75],
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    ["match", ["get", "class"], "primary", 0.75, 0.1],
+                    18,
+                    ["match", ["get", "class"], "primary", 32, 26]
+                ],
+                "line-opacity": ["step", ["zoom"], 0, 10, 1]
+            }
+        });
+
+        map.addSource('bridge-major-link-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-major-link-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["<=", ["get", "layer"], 1],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ]
+            }
+        });
+
+        map.addSource('bridge-motorway-trunk-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-motorway-trunk-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["<=", ["get", "layer"], 1],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    1,
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ]
+            }
+        });
+
+        map.addSource('bridge-major-link', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-major-link",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["<=", ["get", "layer"], 1],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {"line-cap": "round"},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('bridge-street-minor', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-street-minor",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [
+                    "step",
+                    ["zoom"],
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        true,
+                        false
+                    ],
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        [
+                            "street",
+                            "street_limited",
+                            "primary_link",
+                            "secondary_link",
+                            "tertiary_link"
+                        ],
+                        true,
+                        false
+                    ]
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {"line-cap": ["step", ["zoom"], "butt", 14, "round"]},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        2,
+                        "track",
+                        1,
+                        0.5
+                    ],
+                    18,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["street", "street_limited", "primary_link"],
+                        18,
+                        12
+                    ]
+                ],
+                "line-color": "hsl(225, 37%, 23%)",
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('bridge-primary-secondary-tertiary', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-primary-secondary-tertiary",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["primary", "secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {"line-cap": ["step", ["zoom"], "butt", 14, "round"]},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    ["match", ["get", "class"], "primary", 0.75, 0.1],
+                    18,
+                    ["match", ["get", "class"], "primary", 32, 26]
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('bridge-motorway-trunk', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-motorway-trunk",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["<=", ["get", "layer"], 1],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {"line-cap": "round"},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('bridge-major-link-2-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-major-link-2-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [">=", ["get", "layer"], 2],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.75,
+                    20,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ]
+            }
+        });
+
+        map.addSource('bridge-motorway-trunk-2-case', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-motorway-trunk-2-case",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [">=", ["get", "layer"], 2],
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    1,
+                    18,
+                    2
+                ],
+                "line-color": "hsl(225, 31%, 13%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ]
+            }
+        });
+
+        map.addSource('bridge-major-link-2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-major-link-2",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [">=", ["get", "layer"], 2],
+                [
+                    "match",
+                    ["get", "class"],
+                    ["motorway_link", "trunk_link"],
+                    true,
+                    false
+                ],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {"line-cap": "round"},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('bridge-motorway-trunk-2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "bridge-motorway-trunk-2",
+            "type": "line",
+            "metadata": {
+                "mapbox:featureComponent": "road-network",
+                "mapbox:group": "Road network, bridges"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                ["==", ["get", "structure"], "bridge"],
+                [">=", ["get", "layer"], 2],
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {"line-cap": ["step", ["zoom"], "butt", 14, "round"]},
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('transit-label', {
+            type: 'symbol',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "transit-label",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:featureComponent": "transit",
+                "mapbox:group": "Transit, transit-labels"
+            },
+            "source": "composite",
+            "source-layer": "transit_stop_label",
+            "minzoom": 12,
+            "filter": [
+                "step",
+                ["zoom"],
+                [
+                    "all",
+                    [
+                        "match",
+                        ["get", "mode"],
+                        "rail",
+                        true,
+                        "metro_rail",
+                        true,
+                        false
+                    ],
+                    ["!=", ["get", "stop_type"], "entrance"]
+                ],
+                15,
+                [
+                    "all",
+                    [
+                        "match",
+                        ["get", "mode"],
+                        "rail",
+                        true,
+                        "metro_rail",
+                        true,
+                        "light_rail",
+                        true,
+                        false
+                    ],
+                    ["!=", ["get", "stop_type"], "entrance"]
+                ],
+                16,
+                [
+                    "all",
+                    [
+                        "match",
+                        ["get", "mode"],
+                        "ferry",
+                        false,
+                        "bus",
+                        false,
+                        true
+                    ],
+                    ["!=", ["get", "stop_type"], "entrance"]
+                ],
+                17,
+                [
+                    "all",
+                    ["match", ["get", "mode"], "ferry", false, true],
+                    ["!=", ["get", "stop_type"], "entrance"]
+                ],
+                19,
+                ["match", ["get", "mode"], "ferry", false, true]
+            ],
+            "layout": {
+                "text-size": 12,
+                "icon-image": ["get", "network"],
+                "text-font": ["DIN Pro Medium", "Arial Unicode MS Regular"],
+                "text-justify": [
+                    "match",
+                    ["get", "stop_type"],
+                    "entrance",
+                    "left",
+                    "center"
+                ],
+                "text-offset": [
+                    "match",
+                    ["get", "stop_type"],
+                    "entrance",
+                    ["literal", [1, 0]],
+                    ["literal", [0, 0.8]]
+                ],
+                "icon-size": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    0,
+                    0.05,
+                    22,
+                    1.35
+                ],
+                "text-anchor": [
+                    "match",
+                    ["get", "stop_type"],
+                    "entrance",
+                    "left",
+                    "top"
+                ],
+                "text-field": [
+                    "step",
+                    ["zoom"],
+                    "",
+                    14,
+                    [
+                        "match",
+                        ["get", "mode"],
+                        ["rail", "metro_rail"],
+                        ["coalesce", ["get", "name_en"], ["get", "name"]],
+                        ""
+                    ],
+                    16,
+                    [
+                        "match",
+                        ["get", "mode"],
+                        ["bus", "bicycle"],
+                        "",
+                        ["coalesce", ["get", "name_en"], ["get", "name"]]
+                    ],
+                    18,
+                    ["coalesce", ["get", "name_en"], ["get", "name"]]
+                ],
+                "text-letter-spacing": 0.01,
+                "text-max-width": [
+                    "match",
+                    ["get", "stop_type"],
+                    "entrance",
+                    15,
+                    9
+                ]
+            },
+            "paint": {
+                "text-halo-color": "hsl(225, 36%, 1%)",
+                "text-color": "hsl(225, 37%, 65%)",
+                "text-halo-blur": 0.5,
+                "text-halo-width": 0.5
+            }
+        });
     });
 
 
     map.on('idle', () => {
 
-        if (!map.getLayer('Color Lights') ||!map.getLayer('Media Lights') || !map.getLayer('Light Posters') || !map.getLayer('3D Building')) {
+        if (!map.getLayer('Color Lights') ||!map.getLayer('Media Lights') || !map.getLayer('Light Posters')) {
             return;
         }
 
         // Enumerate ids of the layers.
-        const toggleableLayerIds = ['Color Lights', 'Media Lights', 'Light Posters', '3D Building'];
+        const toggleableLayerIds = ['Color Lights', 'Media Lights', 'Light Posters'];
 
         // Set up the corresponding toggle button for each layer.
         for (const id of toggleableLayerIds) {
@@ -1446,15 +3592,21 @@ map.on('load', function () {
         }
     });
         
-        var toggleableLayerIds = [ 'Lane Diffuse 2', 'Lane Diffuse 1', 'Main Diffuse 2', 'Main Diffuse 1', 'Motorway Diffuse', 'Lane Recolor 2', 'Lane Recolor 1', 'Lane Light 2', 'Lane Light 1', 'Roadway Overlay 3', 'Roadway Overlay 2', 'Roadway Overlay 1', 'Main Street Light 2', 'Main Street Light 1', 'Motorway Light', 'Ambience' ];
+        // Multi layer on-off for Base Map.
+        var toggleableLayerIdsBase = [ 'national-park', 'landuse', 'water-shadow', 'water', 'tunnel-street-minor-low', 'tunnel-street-minor-case', 'tunnel-primary-secondary-tertiary-case', 
+        'tunnel-major-link-case', 'tunnel-motorway-trunk-case', 'tunnel-major-link', 'tunnel-street-minor', 'tunnel-primary-secondary-tertiary', 'tunnel-motorway-trunk', 'road-minor-low', 
+        'road-minor-case', 'road-street-low', 'road-street-case', 'road-secondary-tertiary-case', 'road-primary-case', 'road-major-link-case', 'road-motorway-trunk-case', 'road-major-link', 
+        'road-minor', 'road-street', 'road-secondary-tertiary', 'road-primary', 'road-motorway-trunk', 'bridge-street-minor-low', 'bridge-street-minor-case', 'bridge-primary-secondary-tertiary-case', 
+        'bridge-major-link-case', 'bridge-motorway-trunk-case', 'bridge-major-link', 'bridge-street-minor', 'bridge-primary-secondary-tertiary', 'bridge-motorway-trunk', 'bridge-major-link-2-case', 
+        'bridge-motorway-trunk-2-case', 'bridge-major-link-2', 'bridge-motorway-trunk-2', 'transit-label' ];
 
          var link = document.createElement('a');
         link.href = '#';
         link.className = 'active';
-        link.textContent = "Street Lights";
+        link.textContent = "Base Map";
         link.onclick = function (e) {
-             for(var index in toggleableLayerIds) {
-                var clickedLayer = toggleableLayerIds[index];
+             for(var index in toggleableLayerIdsBase) {
+                var clickedLayer = toggleableLayerIdsBase[index];
                 e.preventDefault();
                 e.stopPropagation();
   
@@ -1467,8 +3619,62 @@ map.on('load', function () {
                     this.className = 'active';
                     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
       }
-    }
-    
+    }    
+};
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+        
+        // Multi layer on-off for 3D Buildings.
+        var toggleableLayerIdsBld = [ '3D Buildings' ];
+
+         var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'active';
+        link.textContent = "3D Buildings";
+        link.onclick = function (e) {
+             for(var index in toggleableLayerIdsBld) {
+                var clickedLayer = toggleableLayerIdsBld[index];
+                e.preventDefault();
+                e.stopPropagation();
+  
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+  
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+      }
+    }  
+};
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+
+         // Multi layer on-off for Street Lights.
+         var toggleableLayerIdsStreet = [ 'Lane Diffuse 2', 'Lane Diffuse 1', 'Main Diffuse 2', 'Main Diffuse 1', 'Motorway Diffuse', 'Lane Recolor 2', 'Lane Recolor 1', 'Lane Light 2', 
+        'Lane Light 1', 'Roadway Overlay 3', 'Roadway Overlay 2', 'Roadway Overlay 1', 'Main Street Light 2', 'Main Street Light 1', 'Motorway Light', 'Ambience' ];
+
+         var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'active';
+        link.textContent = "Street Lights";
+        link.onclick = function (e) {
+             for(var index in toggleableLayerIdsStreet) {
+                var clickedLayer = toggleableLayerIdsStreet[index];
+                e.preventDefault();
+                e.stopPropagation();
+  
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+  
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+      }
+    }  
 };
 var layers = document.getElementById('menu');
 layers.appendChild(link);
