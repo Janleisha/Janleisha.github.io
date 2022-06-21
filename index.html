@@ -14,6 +14,7 @@ body { margin: 0; padding: 0; }
 </head>
 <body>
 <style>
+
     #menu {
         background: #29334d;
         position: absolute;
@@ -55,7 +56,10 @@ body { margin: 0; padding: 0; }
     #menu a.active:hover {
         background: #1c3a78;
     }
+
 </style>
+</head>
+<body>
 
 <nav id="menu"></nav>
 <div id='map'></div>
@@ -100,14 +104,14 @@ const map = new mapboxgl.Map({attributionControl: false,
 
      
 // Wait until the map has finished loading. Menu source linking.
-map.on('load', () => {
+map.on('load', function () {
 
-        map.addSource('Media Light', {
+        map.addSource('Media Lights', {
             type: 'vector',
             url: 'mapbox://janleisha.cysfsxfe'
         });
         map.addLayer({
-            "id": "Media Light",
+            "id": "Media Lights",
             "type": "circle",
             "metadata": {"mapbox:group": "ed14d49d217ccd2788fff73014b79120"},
             "source": "composite",
@@ -234,12 +238,12 @@ map.on('load', () => {
             }
         });
 
-        map.addSource('City Light Poster', {
+        map.addSource('Light Posters', {
             type: 'vector',
             url: 'mapbox://janleisha.5ng3phpe'
         });
         map.addLayer({
-            "id": "City Light Poster",
+            "id": "Light Posters",
             "type": "circle",
             "metadata": {"mapbox:group": "ed14d49d217ccd2788fff73014b79120"},
             "source": "composite",
@@ -269,17 +273,1134 @@ map.on('load', () => {
                 ]
             }
         });
+
+        map.addSource('Lane Diffuse 2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Lane Diffuse 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                [
+                    "step",
+                    ["zoom"],
+                    false,
+                    14,
+                    [
+                        "match",
+                        ["get", "class"],
+                        ["secondary_link", "tertiary_link"],
+                        true,
+                        false
+                    ]
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    0,
+                    5,
+                    20,
+                    30
+                ],
+                "line-color": "#ffe3a3",
+                "line-blur": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    0,
+                    1,
+                    22,
+                    36
+                ],
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.2],
+                    ["zoom"],
+                    0,
+                    0.75,
+                    22,
+                    30
+                ]
+            }
+        });
+
+        map.addSource('Lane Diffuse 1', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Lane Diffuse 1",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 16, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    2,
+                    20,
+                    30
+                ],
+                "line-color": "#ffe3a3",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.2],
+                    ["zoom"],
+                    10,
+                    0.75,
+                    20,
+                    20
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.7],
+                    ["zoom"],
+                    13,
+                    0,
+                    16,
+                    0.8,
+                    19,
+                    1
+                ],
+                "line-blur": [
+                    "interpolate",
+                    ["exponential", 0.9],
+                    ["zoom"],
+                    15,
+                    20,
+                    20,
+                    30
+                ]
+            }
+        });
+  
+        map.addSource('Main Diffuse 2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Main Diffuse 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 10,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-color": "hsl(42, 100%, 88%)",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.6],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    19.5,
+                    30
+                ],
+                "line-blur": [
+                    "interpolate",
+                    ["exponential", 1.6],
+                    ["zoom"],
+                    0,
+                    1,
+                    20,
+                    45
+                ],
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    2,
+                    20,
+                    50
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.75],
+                    ["zoom"],
+                    12,
+                    0,
+                    20,
+                    0.8
+                ]
+            }
+        });
+  
+        map.addSource('Main Diffuse 1', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Main Diffuse 1",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 10,
+            "filter": [
+                "all",
+                ["==", ["get", "class"], "primary"],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 17, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    2,
+                    20,
+                    50
+                ],
+                "line-color": "#ffedc2",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.6],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    19.5,
+                    20
+                ],
+                "line-blur": [
+                    "interpolate",
+                    ["exponential", 1.6],
+                    ["zoom"],
+                    0,
+                    1,
+                    20,
+                    45
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.75],
+                    ["zoom"],
+                    12,
+                    0,
+                    20,
+                    0.8
+                ]
+            }
+        });
+
+        map.addSource('Motorway Diffuse', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Motorway Diffuse",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 5,
+            "filter": [
+                "all",
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    10,
+                    2,
+                    20,
+                    50
+                ],
+                "line-color": "#ffedc2",
+                "line-gap-width": [
+                    "interpolate",
+                    ["exponential", 1.6],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    19.5,
+                    30
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.75],
+                    ["zoom"],
+                    12,
+                    0,
+                    20,
+                    0.8
+                ],
+                "line-blur": [
+                    "interpolate",
+                    ["exponential", 1.6],
+                    ["zoom"],
+                    0,
+                    1,
+                    20,
+                    40
+                ]
+            }
+        });
+
+        map.addSource('Lane Recolor 2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Lane Recolor 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 11,
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsla(33, 25%, 14%, 0.45)"
+            }
+        });
+
+        map.addSource('Lane Recolor 1', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Lane Recolor 1",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "hsla(33, 25%, 14%, 0.45)",
+                "line-opacity": ["step", ["zoom"], 0, 14, 1]
+            }
+        });
+
+        map.addSource('Lane Light 2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Lane Light 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 11,
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "#ffe3a3",
+                "line-opacity": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    0,
+                    1,
+                    15,
+                    0.3
+                ],
+                "line-gap-width": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    0,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-blur": ["interpolate", ["linear"], ["zoom"], 16, 5, 22, 5]
+            }
+        });
+
+        map.addSource('Lane Light 1', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Lane Light 1",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 13,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["street", "street_limited", "primary_link"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    12,
+                    0.5,
+                    14,
+                    2,
+                    18,
+                    18
+                ],
+                "line-color": "#ffe3a3",
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.5],
+                    ["zoom"],
+                    15,
+                    1,
+                    22,
+                    0.3
+                ],
+                "line-blur": ["interpolate", ["linear"], ["zoom"], 16, 5, 22, 5]
+            }
+        });
+
+        map.addSource('Roadway Overlay 3', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Roadway Overlay 3",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 8,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.1,
+                    18,
+                    26
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('Roadway Overlay 2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Roadway Overlay 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 6,
+            "filter": [
+                "all",
+                ["==", ["get", "class"], "primary"],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('Roadway Overlay 1', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Roadway Overlay 1",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "filter": [
+                "all",
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 13, "round"],
+                "line-join": ["step", ["zoom"], "miter", 13, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "hsl(225, 37%, 23%)"
+            }
+        });
+
+        map.addSource('Main Street Light 2', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Main Street Light 2",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 8,
+            "filter": [
+                "all",
+                [
+                    "match",
+                    ["get", "class"],
+                    ["secondary", "tertiary"],
+                    true,
+                    false
+                ],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 14, "round"],
+                "line-join": ["step", ["zoom"], "miter", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.1,
+                    18,
+                    32
+                ],
+                "line-color": "#ffe5a8",
+                "line-blur": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    16,
+                    5,
+                    22,
+                    10
+                ],
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.5],
+                    ["zoom"],
+                    13,
+                    1,
+                    22,
+                    0.3
+                ]
+            }
+        });
+
+        map.addSource('Main Street Light 1', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Main Street Light 1",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 6,
+            "filter": [
+                "all",
+                ["==", ["get", "class"], "primary"],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 16, "round"],
+                "line-join": ["step", ["zoom"], "bevel", 14, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "#ffe5a8",
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.5],
+                    ["zoom"],
+                    13,
+                    1,
+                    22,
+                    0.3
+                ],
+                "line-blur": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    16,
+                    5,
+                    22,
+                    10
+                ]
+            }
+        });
+
+        map.addSource('Motorway Light', {
+            type: 'line',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "Motorway Light",
+            "type": "line",
+            "metadata": {"mapbox:group": "610b206d974bc452cfbcf47283f752f1"},
+            "source": "composite",
+            "source-layer": "road",
+            "minzoom": 5,
+            "filter": [
+                "all",
+                ["match", ["get", "class"], ["motorway", "trunk"], true, false],
+                ["match", ["get", "structure"], ["none", "ford"], true, false],
+                ["==", ["geometry-type"], "LineString"]
+            ],
+            "layout": {
+                "line-cap": ["step", ["zoom"], "butt", 13, "round"],
+                "line-join": ["step", ["zoom"], "miter", 13, "round"]
+            },
+            "paint": {
+                "line-width": [
+                    "interpolate",
+                    ["exponential", 1.5],
+                    ["zoom"],
+                    5,
+                    0.75,
+                    18,
+                    32
+                ],
+                "line-color": "#ffedc2",
+                "line-opacity": [
+                    "interpolate",
+                    ["exponential", 0.5],
+                    ["zoom"],
+                    15,
+                    1,
+                    22,
+                    0.5
+                ],
+                "line-blur": [
+                    "interpolate",
+                    ["linear"],
+                    ["zoom"],
+                    16,
+                    5,
+                    22,
+                    10
+                ]
+            }
+        });
+
+        map.addSource('Ambience', {
+            type: 'line',
+            url: 'mapbox://janleisha.cl3svvbl501vn28o7ar8wuikv-5tsnl'
+        });
+        map.addLayer({
+            "id": "Ambience",
+            "type": "circle",
+            "metadata": {"mapbox:group": "1c3c3cc8f3ba93a230ad57ab581d36ee"},
+            "source": "composite",
+            "source-layer": "main_street_ambience",
+            "minzoom": 11,
+            "layout": {},
+            "paint": {
+                "circle-radius": [
+                    "interpolate",
+                    ["exponential", 1.3],
+                    ["zoom"],
+                    11,
+                    1,
+                    13,
+                    5,
+                    14,
+                    12,
+                    17,
+                    72,
+                    20,
+                    180
+                ],
+                "circle-color": [
+                    "case",
+                    [
+                        "match",
+                        ["get", "Cologne"],
+                        [
+                            "Main Carway 2900K",
+                            "Fastway Lower 2900K",
+                            "Fastway Top 2900K",
+                            "Fastway Upper 2900K",
+                            "Main Carway split 2900K"
+                        ],
+                        true,
+                        false
+                    ],
+                    "#fff6e5",
+                    [
+                        "match",
+                        ["get", "Cologne"],
+                        ["Main Carway 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Barbarossa"],
+                        ["Platz 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Barbarossa"],
+                        ["nach 2750K"],
+                        true,
+                        false
+                    ],
+                    "#ffe29e",
+                    ["match", ["get", "Appelhofplatz"], ["2750K"], true, false],
+                    "#ffe29e",
+                    [
+                        "match",
+                        ["get", "Breslauer"],
+                        ["Main 2900K", "Tunnel 2900K"],
+                        true,
+                        false
+                    ],
+                    "#fff6e5",
+                    ["match", ["get", "Chlodwigplatz"], ["2750K"], true, false],
+                    "#ffe29e",
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["vor Dom 2800K", "nach Dom 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    ["match", ["get", "Ebertplatz"], ["2850K"], true, false],
+                    "#fff7e0",
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["outer ring 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Hansaring"],
+                        ["Main 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Fastway 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Carway 2900K"],
+                        true,
+                        false
+                    ],
+                    "#fff6e5",
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["commercial 3000K"],
+                        true,
+                        false
+                    ],
+                    "#fffaf0",
+                    ["match", ["get", "Neumarkt"], ["ring 3000K"], true, false],
+                    "#fff6e5",
+                    ["match", ["get", "Pohligstrasse"], ["2800K"], true, false],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Rudolfplatz"],
+                        ["triangle 2600K"],
+                        true,
+                        false
+                    ],
+                    "#ffd061",
+                    [
+                        "match",
+                        ["get", "Rudolfplatz"],
+                        ["bar Straße ", "dining Strasse "],
+                        true,
+                        false
+                    ],
+                    "hsl(42, 100%, 58%)",
+                    [
+                        "match",
+                        ["get", "Severinstrasse"],
+                        ["Carway 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    ["match", ["get", "Sulz"], ["Main 2800K"], true, false],
+                    "#ffecb8",
+                    ["match", ["get", "Ulrepforte"], ["2650K"], true, false],
+                    "hsl(42, 100%, 72%)",
+                    ["match", ["get", "Zollstock"], ["sub 2800K"], true, false],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Zulpicher"],
+                        ["main 2850K"],
+                        true,
+                        false
+                    ],
+                    "#fff1cc",
+                    "#ffdc8a"
+                ],
+                "circle-blur": 2.5,
+                "circle-opacity": [
+                    "case",
+                    ["match", ["get", "Sulz"], ["Main 2800K"], true, false],
+                    0.4,
+                    [
+                        "match",
+                        ["get", "Barbarossa"],
+                        ["Platz 2800K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Chlodwigplatz"], ["2750K"], true, false],
+                    1,
+                    [
+                        "match",
+                        ["get", "Breslauer"],
+                        ["Main 2900K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Dom"], ["vor Dom 2800K"], true, false],
+                    1,
+                    ["match", ["get", "Dom"], ["joint 2700K"], true, false],
+                    0.2,
+                    ["match", ["get", "Ebertplatz"], ["2700K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Eifelstrasse"],
+                        ["loose 2700K"],
+                        true,
+                        false
+                    ],
+                    0.3,
+                    ["match", ["get", "Eifelstrasse"], ["2700K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["sub 2700K"],
+                        true,
+                        false
+                    ],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["main 2700K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["outer ring 2800K"],
+                        true,
+                        false
+                    ],
+                    0.35,
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["commercial 3000K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Fastway 2800K"],
+                        true,
+                        false
+                    ],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Carway 2900K"],
+                        true,
+                        false
+                    ],
+                    0.7,
+                    ["match", ["get", "Neumarkt"], ["ring 3000K"], true, false],
+                    1,
+                    ["match", ["get", "Pohligstrasse"], ["2800K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Rudolfplatz"],
+                        ["triangle 2600K", "bar Straße "],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Ulrepforte"], ["2650K"], true, false],
+                    0.6,
+                    [
+                        "match",
+                        ["get", "Cologne"],
+                        [
+                            "Main Carway 2900K",
+                            "Fastway Lower 2900K",
+                            "Fastway Top 2900K",
+                            "Fastway Upper 2900K",
+                            "Main Carway split 2900K",
+                            "Main Carway 2800K"
+                        ],
+                        true,
+                        false
+                    ],
+                    0.6,
+                    ["match", ["get", "Zollstock"], ["sub 2800K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Zulpicher"],
+                        ["main 2850K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Zulpicher"], ["sub 2750K"], true, false],
+                    0.7,
+                    0.85
+                ]
+            }
+        });
+
     });
 
 
     map.on('idle', () => {
 
-        if (!map.getLayer('3D Building') ||!map.getLayer('City Light Poster') || !map.getLayer('Media Light') || !map.getLayer('Color Lights')) {
+        if (!map.getLayer('Color Lights') ||!map.getLayer('Media Lights') || !map.getLayer('Light Posters') || !map.getLayer('3D Building')) {
             return;
         }
 
         // Enumerate ids of the layers.
-        const toggleableLayerIds = ['3D Building', 'City Light Poster', 'Media Light', 'Color Lights', 'Street Lights'];
+        const toggleableLayerIds = ['Color Lights', 'Media Lights', 'Light Posters', '3D Building'];
 
         // Set up the corresponding toggle button for each layer.
         for (const id of toggleableLayerIds) {
@@ -324,6 +1445,34 @@ map.on('load', () => {
             layers.appendChild(link);
         }
     });
+        
+        var toggleableLayerIds = [ 'Lane Diffuse 2', 'Lane Diffuse 1', 'Main Diffuse 2', 'Main Diffuse 1', 'Motorway Diffuse', 'Lane Recolor 2', 'Lane Recolor 1', 'Lane Light 2', 'Lane Light 1', 'Roadway Overlay 3', 'Roadway Overlay 2', 'Roadway Overlay 1', 'Main Street Light 2', 'Main Street Light 1', 'Motorway Light', 'Ambience' ];
+
+         var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'active';
+        link.textContent = "Street Lights";
+        link.onclick = function (e) {
+             for(var index in toggleableLayerIds) {
+                var clickedLayer = toggleableLayerIds[index];
+                e.preventDefault();
+                e.stopPropagation();
+  
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+  
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+      }
+    }
+    
+};
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+
 </script>
 
 </body>
