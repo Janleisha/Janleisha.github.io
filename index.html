@@ -1565,6 +1565,49 @@ map.on('load', function () {
             "paint": {"fill-color": "hsla(214, 100%, 29%, 0.5)"}
         });
 
+        map.addSource('building', {
+            type: 'fill',
+            url: 'mapbox://mapbox.mapbox-streets-v8'
+        });
+        map.addLayer({
+            "id": "building",
+            "type": "fill",
+            "metadata": {
+                "mapbox:featureComponent": "buildings",
+                "mapbox:group": "Buildings, built"
+            },
+            "source": "composite",
+            "source-layer": "building",
+            "minzoom": 15,
+            "filter": [
+                "all",
+                ["!=", ["get", "type"], "building:part"],
+                ["==", ["get", "underground"], "false"]
+            ],
+            "layout": {},
+            "paint": {
+                "fill-color": [
+                    "interpolate",
+                    ["exponential", 1.1],
+                    ["zoom"],
+                    14,
+                    "hsl(220, 28%, 16%)",
+                    20,
+                    "hsl(220, 18%, 34%)"
+                ],
+                "fill-opacity": [
+                    "interpolate",
+                    ["exponential", 0.7],
+                    ["zoom"],
+                    15,
+                    0.5,
+                    19,
+                    0.9
+                ],
+                "fill-outline-color": "hsl(225, 28%, 8%)"
+            }
+        });
+
         map.addSource('tunnel-street-minor-low', {
             type: 'line',
             url: 'mapbox://mapbox.mapbox-streets-v8'
@@ -3572,63 +3615,9 @@ map.on('load', function () {
             }
         });
     });
-
-
-    map.on('idle', () => {
-
-        if (!map.getLayer('Color Lights') ||!map.getLayer('Media Lights') || !map.getLayer('Light Posters')) {
-            return;
-        }
-
-        // Enumerate ids of the layers.
-        const toggleableLayerIds = ['Color Lights', 'Media Lights', 'Light Posters'];
-
-        // Set up the corresponding toggle button for each layer.
-        for (const id of toggleableLayerIds) {
-            // Skip layers that already have a button set up.
-            if (document.getElementById(id)) {
-                continue;
-            }
-
-            // Create a link.
-            const link = document.createElement('a');
-            link.id = id;
-            link.href = '#';
-            link.textContent = id;
-            link.className = 'active';
-
-            // Show or hide layer when the toggle is clicked.
-            link.onclick = function (e) {
-                const clickedLayer = this.textContent;
-                e.preventDefault();
-                e.stopPropagation();
-
-                const visibility = map.getLayoutProperty(
-                    clickedLayer,
-                    'visibility'
-                );
-
-                // Toggle layer visibility by changing the layout object's visibility property.
-                if (visibility === 'visible') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    this.className = '';
-                } else {
-                    this.className = 'active';
-                    map.setLayoutProperty(
-                        clickedLayer,
-                        'visibility',
-                        'visible'
-                    );
-                }
-            };
-
-            const layers = document.getElementById('menu');
-            layers.appendChild(link);
-        }
-    });
-        
+       
         // Multi layer on-off for Base Map.
-        var toggleableLayerIdsBase = [ 'national-park', 'landuse', 'water-shadow', 'water', 'tunnel-street-minor-low', 'tunnel-street-minor-case', 'tunnel-primary-secondary-tertiary-case', 
+        var toggleableLayerIdsBase = [ 'national-park', 'landuse', 'water-shadow', 'water', 'building', 'tunnel-street-minor-low', 'tunnel-street-minor-case', 'tunnel-primary-secondary-tertiary-case', 
         'tunnel-major-link-case', 'tunnel-motorway-trunk-case', 'tunnel-major-link', 'tunnel-street-minor', 'tunnel-primary-secondary-tertiary', 'tunnel-motorway-trunk', 'road-minor-low', 
         'road-minor-case', 'road-street-low', 'road-street-case', 'road-secondary-tertiary-case', 'road-primary-case', 'road-major-link-case', 'road-motorway-trunk-case', 'road-major-link', 
         'road-minor', 'road-street', 'road-secondary-tertiary', 'road-primary', 'road-motorway-trunk', 'bridge-street-minor-low', 'bridge-street-minor-case', 'bridge-primary-secondary-tertiary-case', 
@@ -3708,11 +3697,93 @@ layers.appendChild(link);
                 } else {
                     this.className = 'active';
                     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-      }
+        }
     }  
 };
 var layers = document.getElementById('menu');
 layers.appendChild(link);
+
+         // Multi layer on-off for Color Lights.
+         var toggleableLayerIdsColor = [ 'Color Lights' ];
+
+          var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'active';
+        link.textContent = "Color Lights";
+        link.onclick = function (e) {
+            for(var index in toggleableLayerIdsColor) {
+                var clickedLayer = toggleableLayerIdsColor[index];
+                e.preventDefault();
+                e.stopPropagation();
+
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    }  
+};
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+
+         // Multi layer on-off for Media Lights.
+         var toggleableLayerIdsMedia = [ 'Media Lights' ];
+
+          var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'active';
+        link.textContent = "Media Lights";
+        link.onclick = function (e) {
+            for(var index in toggleableLayerIdsMedia) {
+                var clickedLayer = toggleableLayerIdsMedia[index];
+                e.preventDefault();
+                e.stopPropagation();
+
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    }  
+};
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+
+         // Multi layer on-off for Light Posters.
+         var toggleableLayerIdsPoster = [ 'Light Posters' ];
+
+          var link = document.createElement('a');
+        link.href = '#';
+        link.className = 'active';
+        link.textContent = "Light Posters";
+        link.onclick = function (e) {
+            for(var index in toggleableLayerIdsPoster) {
+                var clickedLayer = toggleableLayerIdsPoster[index];
+                e.preventDefault();
+                e.stopPropagation();
+
+                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    }  
+};
+var layers = document.getElementById('menu');
+layers.appendChild(link);
+
 
 </script>
 
