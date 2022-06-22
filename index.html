@@ -16,6 +16,23 @@ body { margin: 0; padding: 0; }
 <body>
 <style>
 
+    .mapboxgl-popup {
+        max-width: 300px;
+        color: #fffae3;
+        font: 12px/20px 'Open Sans', sans-serif;
+    }
+    .mapboxgl-popup-content {
+        background-color: #4a72c2;
+        border-radius: 6px;
+        padding: 15px 15px 15px;
+    }
+    .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+        border-top-color: #4a72c2;
+    }  
+    .mapboxgl-popup-close-button {
+        color: #7f8287;
+    }  
+
     #menu {
         background: #29334d;
         position: absolute;
@@ -103,7 +120,25 @@ const map = new mapboxgl.Map({attributionControl: false,
             showZoom: true
     }));
 
-     
+    // Add pop out click event to color light layer.
+    map.on('click', (event) => {
+      const features = map.queryRenderedFeatures(event.point, {
+      layers: ['color-lights']
+      });
+      if (!features.length) {
+        return;
+      }
+      const feature = features[0];
+ 
+      const popup = new mapboxgl.Popup({ offset: [0, -10] })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML(
+          `<h3>${feature.properties.title}</h3>
+          <p>${feature.properties.description}</p>`
+        )
+        .addTo(map);
+    });
+    
 // Wait until the map has finished loading. Menu source linking.
 map.on('load', function () {
 
