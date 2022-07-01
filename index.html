@@ -2577,7 +2577,7 @@ map.on('load', function () {
                     0,
                     1,
                     15,
-                    0.3
+                    0.25
                 ],
                 "line-gap-width": [
                     "interpolate",
@@ -2641,7 +2641,7 @@ map.on('load', function () {
                     15,
                     1,
                     22,
-                    0.3
+                    0.25
                 ],
                 "line-blur": ["interpolate", ["linear"], ["zoom"], 16, 5, 22, 5]
             }
@@ -2811,7 +2811,7 @@ map.on('load', function () {
                     13,
                     1,
                     22,
-                    0.3
+                    0.25
                 ]
             }
         });
@@ -2855,7 +2855,7 @@ map.on('load', function () {
                     13,
                     1,
                     22,
-                    0.3
+                    0.25
                 ],
                 "line-blur": [
                     "interpolate",
@@ -2908,7 +2908,7 @@ map.on('load', function () {
                     15,
                     1,
                     22,
-                    0.5
+                    0.25
                 ],
                 "line-blur": [
                     "interpolate",
@@ -2923,7 +2923,7 @@ map.on('load', function () {
         });
 
         map.addSource('Ambience', {
-            type: 'line',
+            type: 'circle',
             url: 'mapbox://janleisha.cl3svvbl501vn28o7ar8wuikv-5tsnl'
         });
         map.addLayer({
@@ -2933,7 +2933,6 @@ map.on('load', function () {
             "source": "composite",
             "source-layer": "main_street_ambience",
             "minzoom": 11,
-            "layout": {},
             "paint": {
                 "circle-radius": [
                     "interpolate",
@@ -2944,11 +2943,49 @@ map.on('load', function () {
                     13,
                     5,
                     14,
-                    12,
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        [
+                            "hbf front",
+                            "dom front",
+                            "dom back",
+                            "hbf side",
+                            "hbf back"
+                        ],
+                        20,
+                        12
+                    ],
                     17,
-                    72,
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["hbf front"],
+                        160,
+                        ["hbf back"],
+                        130,
+                        ["hbf side"],
+                        200,
+                        ["dom back"],
+                        100,
+                        ["dom front"],
+                        120,
+                        72
+                    ],
                     20,
-                    180
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        [
+                            "hbf front",
+                            "hbf back",
+                            "hbf side",
+                            "dom front",
+                            "dom back"
+                        ],
+                        900,
+                        180
+                    ]
                 ],
                 "circle-color": [
                     "case",
@@ -3094,7 +3131,351 @@ map.on('load', function () {
                         false
                     ],
                     "#fff1cc",
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["hbf front", "hbf back", "hbf side"],
+                        true,
+                        false
+                    ],
+                    "hsl(42, 100%, 96%)",
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["dom back", "dom front"],
+                        true,
+                        false
+                    ],
+                    "hsl(42, 100%, 84%)",
                     "#ffdc8a"
+                ],
+                "circle-blur": 2.5,
+                "circle-opacity": [
+                    "case",
+                    ["match", ["get", "Sulz"], ["Main 2800K"], true, false],
+                    0.4,
+                    [
+                        "match",
+                        ["get", "Barbarossa"],
+                        ["Platz 2800K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Chlodwigplatz"], ["2750K"], true, false],
+                    1,
+                    [
+                        "match",
+                        ["get", "Breslauer"],
+                        ["Main 2900K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Dom"], ["vor Dom 2800K"], true, false],
+                    1,
+                    ["match", ["get", "Dom"], ["joint 2700K"], true, false],
+                    0.2,
+                    ["match", ["get", "Ebertplatz"], ["2700K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Eifelstrasse"],
+                        ["loose 2700K"],
+                        true,
+                        false
+                    ],
+                    0.3,
+                    ["match", ["get", "Eifelstrasse"], ["2700K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["sub 2700K"],
+                        true,
+                        false
+                    ],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["main 2700K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["outer ring 2800K"],
+                        true,
+                        false
+                    ],
+                    0.35,
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["commercial 3000K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Fastway 2800K"],
+                        true,
+                        false
+                    ],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Carway 2900K"],
+                        true,
+                        false
+                    ],
+                    0.7,
+                    ["match", ["get", "Neumarkt"], ["ring 3000K"], true, false],
+                    1,
+                    ["match", ["get", "Pohligstrasse"], ["2800K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Rudolfplatz"],
+                        ["triangle 2600K", "bar Straße "],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Ulrepforte"], ["2650K"], true, false],
+                    0.6,
+                    [
+                        "match",
+                        ["get", "Cologne"],
+                        [
+                            "Main Carway 2900K",
+                            "Fastway Lower 2900K",
+                            "Fastway Top 2900K",
+                            "Fastway Upper 2900K",
+                            "Main Carway split 2900K",
+                            "Main Carway 2800K"
+                        ],
+                        true,
+                        false
+                    ],
+                    0.6,
+                    ["match", ["get", "Zollstock"], ["sub 2800K"], true, false],
+                    0.5,
+                    [
+                        "match",
+                        ["get", "Zulpicher"],
+                        ["main 2850K"],
+                        true,
+                        false
+                    ],
+                    1,
+                    ["match", ["get", "Zulpicher"], ["sub 2750K"], true, false],
+                    0.7,
+                    ["match", ["get", "Dom"], ["hbf front"], true, false],
+                    1,
+                    0.85
+                ]
+            }
+        });
+
+        map.addSource('Ambience enhance', {
+            type: 'circle',
+            url: 'mapbox://janleisha.cl3svvbl501vn28o7ar8wuikv-5tsnl'
+        });
+        map.addLayer({
+            "id": "Ambience enhance",
+            "type": "circle",
+            "metadata": {"mapbox:group": "1c3c3cc8f3ba93a230ad57ab581d36ee"},
+            "source": "composite",
+            "source-layer": "main_street_ambience",
+            "minzoom": 11,
+            "paint": {
+                "circle-radius": [
+                    "interpolate",
+                    ["exponential", 1.3],
+                    ["zoom"],
+                    11,
+                    1,
+                    13,
+                    5,
+                    14,
+                    12,
+                    17,
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["", "dom front", "hbf front", "hbf back"],
+                        120,
+                        72
+                    ],
+                    20,
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["", "dom front", "hbf front", "hbf back"],
+                        900,
+                        180
+                    ]
+                ],
+                "circle-color": [
+                    "case",
+                    [
+                        "match",
+                        ["get", "Cologne"],
+                        [
+                            "Main Carway 2900K",
+                            "Fastway Lower 2900K",
+                            "Fastway Top 2900K",
+                            "Fastway Upper 2900K",
+                            "Main Carway split 2900K"
+                        ],
+                        true,
+                        false
+                    ],
+                    "hsla(39, 100%, 95%, 0.5)",
+                    [
+                        "match",
+                        ["get", "Cologne"],
+                        ["Main Carway 2800K"],
+                        true,
+                        false
+                    ],
+                    "hsla(44, 100%, 86%, 0.3)",
+                    [
+                        "match",
+                        ["get", "Barbarossa"],
+                        ["Platz 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    [
+                        "match",
+                        ["get", "Barbarossa"],
+                        ["nach 2750K"],
+                        true,
+                        false
+                    ],
+                    "hsla(42, 100%, 81%, 0.3)",
+                    ["match", ["get", "Appelhofplatz"], ["2750K"], true, false],
+                    "hsla(42, 100%, 81%, 0.6)",
+                    [
+                        "match",
+                        ["get", "Breslauer"],
+                        ["Main 2900K", "Tunnel 2900K"],
+                        true,
+                        false
+                    ],
+                    "hsla(39, 100%, 95%, 0.7)",
+                    ["match", ["get", "Chlodwigplatz"], ["2750K"], true, false],
+                    "#ffe29e",
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["vor Dom 2800K", "nach Dom 2800K"],
+                        true,
+                        false
+                    ],
+                    "#ffecb8",
+                    ["match", ["get", "Ebertplatz"], ["2850K"], true, false],
+                    "#fff7e0",
+                    [
+                        "match",
+                        ["get", "Friesenplatz"],
+                        ["outer ring 2800K"],
+                        true,
+                        false
+                    ],
+                    "hsla(44, 100%, 86%, 0)",
+                    [
+                        "match",
+                        ["get", "Hansaring"],
+                        ["Main 2800K"],
+                        true,
+                        false
+                    ],
+                    "hsla(44, 100%, 86%, 0.6)",
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Fastway 2800K"],
+                        true,
+                        false
+                    ],
+                    "hsla(44, 100%, 86%, 0.3)",
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["Carway 2900K"],
+                        true,
+                        false
+                    ],
+                    "hsla(39, 100%, 95%, 0.3)",
+                    [
+                        "match",
+                        ["get", "Heumarkt"],
+                        ["commercial 3000K"],
+                        true,
+                        false
+                    ],
+                    "hsl(40, 100%, 97%)",
+                    ["match", ["get", "Neumarkt"], ["ring 3000K"], true, false],
+                    "#fff6e5",
+                    ["match", ["get", "Pohligstrasse"], ["2800K"], true, false],
+                    "hsla(44, 100%, 86%, 0.2)",
+                    [
+                        "match",
+                        ["get", "Rudolfplatz"],
+                        ["triangle 2600K"],
+                        true,
+                        false
+                    ],
+                    "#ffd061",
+                    [
+                        "match",
+                        ["get", "Rudolfplatz"],
+                        ["bar Straße ", "dining Strasse "],
+                        true,
+                        false
+                    ],
+                    "hsla(42, 100%, 58%, 0.7)",
+                    [
+                        "match",
+                        ["get", "Severinstrasse"],
+                        ["Carway 2800K"],
+                        true,
+                        false
+                    ],
+                    "hsla(44, 100%, 86%, 0.5)",
+                    ["match", ["get", "Sulz"], ["Main 2800K"], true, false],
+                    "hsla(44, 100%, 86%, 0)",
+                    ["match", ["get", "Ulrepforte"], ["2650K"], true, false],
+                    "hsla(42, 100%, 72%, 0.5)",
+                    ["match", ["get", "Zollstock"], ["sub 2800K"], true, false],
+                    "hsla(44, 100%, 86%, 0)",
+                    [
+                        "match",
+                        ["get", "Zulpicher"],
+                        ["main 2850K"],
+                        true,
+                        false
+                    ],
+                    "#fff1cc",
+                    [
+                        "match",
+                        ["get", "Dom"],
+                        ["hbf front", "hbf back", "dom front"],
+                        true,
+                        false
+                    ],
+                    "hsla(42, 100%, 94%, 0.8)",
+                    "hsla(42, 100%, 77%, 0.3)"
                 ],
                 "circle-blur": 2.5,
                 "circle-opacity": [
@@ -5479,7 +5860,7 @@ layers.appendChild(link);
 
          // Multi layer on-off for Street Lights.
          var toggleableLayerIdsStreet = [ 'Lane Diffuse 2', 'Lane Diffuse 1', 'Main Diffuse 2', 'Main Diffuse 1', 'Motorway Diffuse', 'Lane Recolor 2', 'Lane Recolor 1', 'Lane Light 2', 
-        'Lane Light 1', 'Roadway Overlay 3', 'Roadway Overlay 2', 'Roadway Overlay 1', 'Main Street Light 2', 'Main Street Light 1', 'Motorway Light', 'Ambience' ];
+        'Lane Light 1', 'Roadway Overlay 3', 'Roadway Overlay 2', 'Roadway Overlay 1', 'Main Street Light 2', 'Main Street Light 1', 'Motorway Light', 'Ambience', 'Ambience enhance' ];
 
          var link = document.createElement('a');
         link.href = '#';
